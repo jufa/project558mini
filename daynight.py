@@ -26,14 +26,14 @@ class DayNight():
   def get_today_events(self):
     todayutc = datetime.now(timezone.utc)
     s = sun(self.observer, date=todayutc, tzinfo="UTC")
-    print((
-        f'Dawn:    {s["dawn"]}\n'
-        f'Sunrise: {s["sunrise"]}\n'
-        f'Noon:    {s["noon"]}\n'
-        f'Sunset:  {s["sunset"]}\n'
-        f'Dusk:    {s["dusk"]}\n'
-        f'Now:     {todayutc.isoformat()}'
-    ))
+    # print((
+    #     f'Dawn:    {s["dawn"]}\n'
+    #     f'Sunrise: {s["sunrise"]}\n'
+    #     f'Noon:    {s["noon"]}\n'
+    #     f'Sunset:  {s["sunset"]}\n'
+    #     f'Dusk:    {s["dusk"]}\n'
+    #     f'Now:     {todayutc.isoformat()}'
+    # ))
     return s
 
 
@@ -44,8 +44,8 @@ class DayNight():
     dawn = events["dawn"]
     dusk = events["dusk"]
     is_day = now < dusk and now > dawn
-    print(f"is it after dawn? {now > dawn}")
-    print(f"is it before dusk? {now < dusk}")
+    # print(f"is it after dawn? {now > dawn}")
+    # print(f"is it before dusk? {now < dusk}")
     print(f"is it day as far as a camera is concerned? {is_day}")
     return is_day
 
