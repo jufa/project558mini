@@ -10,12 +10,13 @@ class pihqCamera:
   exposure_night = {
     "controls": {
       "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.HighQuality,
-      "AnalogueGain": 6,
+      "AnalogueGain": 4,
       "ExposureTime": int(10 * 1_000_000), # 10s
       "FrameRate": 1/10, # per sec
       "AwbEnable": 0,
       "AeEnable": 0,
-      "ColourGains": (4.0, 1.5) # red, blue
+      "ColourGains": (4.0, 1.5), # red, blue
+      "Saturation": 0.5
     },
     "configuration": {}
   }
@@ -28,6 +29,7 @@ class pihqCamera:
       "FrameRate": 5, # per sec
       "AwbEnable": 1,
       "AeEnable": 1,
+      "Saturation": 0.5,
       # "ColourGains": (4.0, 1.5) # red, blue
     },
     "configuration": {}
@@ -51,7 +53,7 @@ class pihqCamera:
     config = self.camera.create_still_configuration(
       main={"size": (2160,2160), "format": "RGB888"},
       # lores={"size": (1024,1024), "format": "YUV420"},
-      buffer_count=1,
+      buffer_count=2,
       queue=True
     )
     self.camera.configure(config)
