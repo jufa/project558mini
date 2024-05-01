@@ -24,11 +24,14 @@ class pihqCamera:
   exposure_day = {
     "controls": {
       "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.HighQuality,
-      "AnalogueGain": 16,
+      "AnalogueGain": 1,
       # "ExposureTime": int(1/500 * 1_000_000),
       "FrameRate": 5, # per sec
       "AwbEnable": 1,
+      "AwbMode": controls.AwbModeEnum.Daylight,
       "AeEnable": 1,
+      # "AeMeteringMode": controls.AeMeteringModeEnum.Spot,
+      "AeConstraintMode": controls.AeConstraintModeEnum.Highlight,
       "Saturation": 0.5,
       # "ColourGains": (4.0, 1.5) # red, blue
     },
