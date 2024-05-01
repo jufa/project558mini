@@ -4,6 +4,7 @@
 import time
 from picamera2 import Picamera2, Controls
 from libcamera import controls
+import cv2
 
 class pihqCamera:
 
@@ -55,7 +56,7 @@ class pihqCamera:
     self.camera = Picamera2()
     config = self.camera.create_still_configuration(
       main={"size": (2160,2160), "format": "RGB888"},
-      # lores={"size": (1024,1024), "format": "YUV420"},
+      lores={"size": (512,512), "format": "YUV420"},
       buffer_count=2,
       queue=True
     )
@@ -80,12 +81,13 @@ class pihqCamera:
     self.camera.set_controls(pihqCamera.exposure_day["controls"])
     time.sleep(2)
 
-  def capture(self, filepath):
+  def capture(self, filepath, filepath_lores=None):
     if not self.started:
       print("Cameras needs to start before capture: starting...")
       self.start()
     print("camera capture request:")
     r = self.camera.capture_request()
+    lres = self.camera.capture_array("lores")
     print("complete. saving...")
     # if os.path.exists(filepath):
     #   print("old jpg exists, removing...")
@@ -93,6 +95,9 @@ class pihqCamera:
     #   print("removal complete. continuing with save")
     try:  
       r.save("main", filepath)
+      if filepath_lores:
+        lres_rgb = cv2.cvtColor(lres,cv2.COLOR_YUV420p2RGB)
+        cv2.imwrite(filepath_lores, lres_rgb)
     except Exception as e:
       print(f"save exception:{e}")
     print("releasing camera...")

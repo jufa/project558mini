@@ -6,6 +6,7 @@ __pycache__/
 # Images
 captures/
 capture.jpg
+capture_lores.jpg
 
 # C extensions
 *.so

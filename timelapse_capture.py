@@ -133,7 +133,7 @@ class TimelapseCapture():
       print("complete.")
 
     try:
-      self.camera.capture("capture.jpg")
+      self.camera.capture("capture.jpg", "capture_lores.jpg")
       self.log("capture complete")
     except Exception as e:
       self.log(f"ERROR: Capture: {e}")
