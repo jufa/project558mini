@@ -87,17 +87,12 @@ class pihqCamera:
       self.start()
     print("camera capture request:")
     r = self.camera.capture_request()
-    lres = self.camera.capture_array("lores")
     print("complete. saving...")
-    # if os.path.exists(filepath):
-    #   print("old jpg exists, removing...")
-    #   os.remove(filepath)
-    #   print("removal complete. continuing with save")
     try:  
       r.save("main", filepath)
       if filepath_lores:
-        lres_rgb = cv2.cvtColor(lres,cv2.COLOR_YUV420p2RGB)
-        cv2.imwrite(filepath_lores, lres_rgb)
+        lres = r.make_image("main", 540, 540) # PIL image from this CompletedRequest object at 1/4 UHD resolution
+        lres.save(filepath_lores)
     except Exception as e:
       print(f"save exception:{e}")
     print("releasing camera...")
