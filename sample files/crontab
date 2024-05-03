@@ -1,0 +1,6 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+@reboot sleep 3; sudo service smbd restart
+@reboot echo crontab for user pi
+@reboot sleep 2; exec /home/pi/project558mini/bootloader.sh
+*/2 * * * * exec /home/pi/project558mini/appwatchdog.sh

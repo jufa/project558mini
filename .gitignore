@@ -8,6 +8,9 @@ captures/
 capture.jpg
 capture_lores.jpg
 
+# logs
+logs/*
+
 # C extensions
 *.so
 

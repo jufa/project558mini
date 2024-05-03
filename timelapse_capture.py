@@ -13,6 +13,7 @@ from pihq_camera import pihqCamera
 from daynight import DayNight
 import pause
 import shutil
+from utils import killapp
 from picamserve import Webserver
 
 
@@ -132,11 +133,12 @@ class TimelapseCapture():
       self.is_night = True
       print("complete.")
 
-    try:
-      self.camera.capture("capture.jpg", "capture_lores.jpg")
+    result = self.camera.capture("capture.jpg", "capture_lores.jpg")
+    if result == 0:
       self.log("capture complete")
-    except Exception as e:
-      self.log(f"ERROR: Capture: {e}")
+    else:
+      self.log(f"Error in Capture... terminating timelapse_capture.py")
+      killapp()
      
     with open('capture.jpg', 'rb') as image:
       exif_data = Image(image)

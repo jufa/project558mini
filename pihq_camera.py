@@ -2,16 +2,18 @@
 # -*- coding: utf-8 -*-
 
 import time
+import sys, os
+import cv2
 from picamera2 import Picamera2, Controls
 from libcamera import controls
-import cv2
+from func_timeout import func_timeout, FunctionTimedOut
 
 class pihqCamera:
 
   exposure_night = {
     "controls": {
       "NoiseReductionMode": controls.draft.NoiseReductionModeEnum.HighQuality,
-      "AnalogueGain": 4,
+      "AnalogueGain": 1,
       "ExposureTime": int(10 * 1_000_000), # 10s
       "FrameRate": 1/10, # per sec
       "AwbEnable": 0,
@@ -82,20 +84,39 @@ class pihqCamera:
     time.sleep(2)
 
   def capture(self, filepath, filepath_lores=None):
+    error_flag = False
     if not self.started:
       print("Cameras needs to start before capture: starting...")
       self.start()
+
     print("camera capture request:")
-    r = self.camera.capture_request()
-    print("complete. saving...")
-    try:  
-      r.save("main", filepath)
-      if filepath_lores:
-        lres = r.make_image("main", 540, 540) # PIL image from this CompletedRequest object at 1/4 UHD resolution
-        lres.save(filepath_lores)
+    try:
+      r = func_timeout(60, self.camera.capture_request)
+      # r = self.camera.capture_request()
+    except FunctionTimedOut as e:
+      print(f"Timed out: capture_request() {e}")
+      return -1
     except Exception as e:
-      print(f"save exception:{e}")
+      print(f"Exception during capture_request() {e}")
+      return -1
+    
+    print("complete. saving...")
+    try:
+      func_timeout(30, r.save, args=("main", filepath))
+      # r.save("main", filepath)
+    except Exception as e:
+      print(f"Exception during save(): {e}")
+      return -1
+    
+    if filepath_lores:
+      lres = r.make_image("main", 540, 540) # PIL image from this CompletedRequest object at 1/4 UHD resolution
+      try:
+        func_timeout(30, lres.save, ars=(filepath_lores))
+        # lres.save(filepath_lores)
+      except Exception as e:
+        print(f"Exception during save() lores: {e}")
+
     print("releasing camera...")
     r.release()
     print("release complete.")
-    return True
+    return 0
