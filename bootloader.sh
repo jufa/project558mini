@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-APP_ENTRY="cd project558mini;source ./env/bin/activate;python timelapse_capture.py"
+APP_ENTRY="cd /home/pi/project558mini;source ./env/bin/activate;python timelapse_capture.py"
 echo AurorEye Bootloader
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin 
