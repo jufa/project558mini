@@ -36,15 +36,18 @@ class TimelapseCapture():
       "folder":""
     }
 
+  def log(self, message, level=0):
+    if level == 0:
+      print(f"{datetime.now().isoformat()} {message}\n")
+    if level == 1:
+      with open("./logs/timelapse_capture.log", "a") as f:
+        f.write(f"{datetime.now().isoformat()} {message}\n")
 
   def pre_callback(self, request):
     print("pre_callback called")
 
   def post_callback(self, request):
     print("post_callback called")
-
-  def log(self, message):
-    print(f"TIMELAPSE: {message}")
 
   def create_day_folder(self, datetime_reference):
     folder_name = datetime.strftime(datetime_reference,"%Y-%m-%d") #'2024-04-29'
@@ -137,7 +140,7 @@ class TimelapseCapture():
     if result == 0:
       self.log("capture complete")
     else:
-      self.log(f"Error in Capture... terminating timelapse_capture.py")
+      self.log(f"Error in Capture... terminating timelapse_capture.py", 1)
       killapp()
      
     with open('capture.jpg', 'rb') as image:
