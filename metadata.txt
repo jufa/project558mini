@@ -1,0 +1,40 @@
+{
+  "SensorTimestamp": 284503136000,
+  "ScalerCrop": [
+    508,
+    0,
+    3040,
+    3040
+  ],
+  "AnalogueGain": 9.941747665405273,
+  "Bcm2835StatsOutput": null,
+  "ColourCorrectionMatrix": [
+    1.2869035005569458,
+    -0.04279160127043724,
+    -0.24410635232925415,
+    0.01713552698493004,
+    1.5006294250488281,
+    -0.517761766910553,
+    0.14837263524532318,
+    0.1953408569097519,
+    0.6562883853912354
+  ],
+  "SensorBlackLevels": [
+    4096,
+    4096,
+    4096,
+    4096
+  ],
+  "ExposureTime": 19999371,
+  "FrameDuration": 20000000,
+  "Lux": 0.09333716332912445,
+  "AeLocked": true,
+  "FocusFoM": 16055,
+  "SensorTemperature": 16.0,
+  "DigitalGain": 1.005890965461731,
+  "ColourGains": [
+    3.0,
+    1.5
+  ],
+  "ColourTemperature": 4900
+}

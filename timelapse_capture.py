@@ -29,6 +29,7 @@ class TimelapseCapture():
     self.root = os.path.join("./", "captures")
     self.interval = 30
     self.is_night = True
+    self.consecutive = -1
     self.sequence_data={
       "start":0,
       "end":0,
@@ -75,7 +76,8 @@ class TimelapseCapture():
     self.thread.start()
 
   def wait_till_boundary(self):
-    boundary = 10 # sec
+    # return # temporary override for faster testing TODO: remove
+    boundary = 20 # sec
     now = datetime.now().timestamp()
     remainder = now % boundary #todo this is a hack fro checking the synchronization times. it appeasr the cam free runs capture, capture_image does not trigger a new capture, just grabs either the one almost done or the next one starting after the request.
     till_next = boundary - remainder
@@ -85,24 +87,38 @@ class TimelapseCapture():
     print(f"pausing complete. continuing.")
 
   def set_day_night(self):
-    print("set_day_night: checking if day or night...{}")
+    # print("overriding daynight check, forcing night only...")
+    # return
+    print("set_day_night: checking if day or night...")
     if not self.daynight.is_day():
       print("it is night. Setting camera to night mode...")
       self.camera.set_night_mode()
       self.is_night = True
+      self.wait_till_boundary()
       print("complete.")
     elif self.daynight.is_day():
       print("it is day. Setting camera to day mode...")
       self.camera.set_day_mode()
       self.is_night = False
+      self.wait_till_boundary()
       print("complete.")
     else:
       print(f"conditional fallthrough: daynight not reportingis_day as bool: output: {self.daynight.is_day()}")
 
+  def increment_consecutive(self):
+    self.consecutive += 1
+    with open("./consecutive.txt", "w") as f:
+      f.write(f"{self.consecutive}")
+
+  def clear_consecutive(self):
+    self.consecutive = 0
+    with open("./consecutive.txt", "w") as f:
+      f.write(f"{self.consecutive}")
 
   def run(self):
     print("Timelapse: Run...")
     self.set_day_night()
+    self.clear_consecutive()
 
     while True:
       print("timelpase: run: starting loop...")
@@ -115,6 +131,7 @@ class TimelapseCapture():
         self.wait_till_boundary() # daytime camera is freerunning at a framerate higher than our timelapose framerate in order to do Aeb Awb calcs. so we make it wait till a boundary
       print(f"getting image at {datetime.now()}")
       self.get_image()
+      self.increment_consecutive()
       print(f"image capture complete at {datetime.now()}")
 
   def stop_timelapse():

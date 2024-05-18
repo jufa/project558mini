@@ -7,6 +7,7 @@ from datetime import datetime
 from datetime import timezone
 import threading
 import queue
+from pprint import pp
 from pihq_camera import pihqCamera
 from daynight import DayNight
 from bottle import Bottle, ServerAdapter, request, route, run, template, HTTPResponse, static_file, TEMPLATE_PATH, error
@@ -95,6 +96,30 @@ class Webserver:
 
     @self.bottle.route('/latest')
     def latest():
+      metadata = "METADATA"
+      hms_since_boot = "hms_since_boot"
+      consecutive="could not read number of consecutive frames"
+      with open("./metadata.txt", "r") as f:
+        metadata =  json.load(f)
+        metadata_parsed = json.dumps(metadata, indent=4)
+      with open("./consecutive.txt", "r") as f:
+        consecutive = f.read()
+
+      try:
+        ns_since_boot = int(metadata["SensorTimestamp"])
+        seconds_since_boot = ns_since_boot/1000/1000/1000
+        hours_since_boot = int(seconds_since_boot/3600)
+        seconds_since_boot = seconds_since_boot - hours_since_boot*3600
+        minutes_since_boot = int(seconds_since_boot/60)
+        seconds_since_boot = seconds_since_boot - minutes_since_boot*60
+        hms_since_boot = f"{hours_since_boot}:{minutes_since_boot}:{seconds_since_boot}"
+      except Exception as e:
+         hms_since_boot = f"hms_since_boot parse error: {e}"
+      response = template('<body style="background:black;color:white;font-size:2em"><img width="100%" src="/hireslatestimage"><br/>images so far: {{consecutive}}<br/>time since camera sensor reboot: {{hms_since_boot}}<br/>METADATA:<br/><pre>{{metadata_parsed}}</pre></body>', consecutive=consecutive, hms_since_boot = hms_since_boot, metadata_parsed = metadata_parsed)
+      return response
+
+    @self.bottle.route('/hireslatestimage')
+    def hireslatestimage():
       # self.log("capturing image...")
       # self.log(f"it is currently {'day' if self.daynight.is_day() else 'night'}")
       # try:
@@ -108,6 +133,7 @@ class Webserver:
       response = static_file('capture.jpg', root=base)
       response.set_header("Cache-Control", "public, max-age=0") # prevent any caching
       return response
+    
 
     @self.bottle.route('/')
     def page_landing():
