@@ -16,34 +16,34 @@ from cheroot.ssl.builtin import BuiltinSSLAdapter
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 
 class WSGIRefServer(ServerAdapter):
-    server = None # class variable, not instance
-    quiet = True
-    logger = None
+  server = None # class variable, not instance
+  quiet = True
+  logger = None
 
-    def set_logger(self, logger):
-      self.logger = logger
+  def set_logger(self, logger):
+    self.logger = logger
 
-    def log(self, msg):
-      if self.logger:
-        self.logger.append_log(f'[WSGIServer]\t{msg}')
+  def log(self, msg):
+    if self.logger:
+      self.logger.append_log(f'[WSGIServer]\t{msg}')
 
-    def run(self, handler):
-      self.log(f'run WSGIServer: host:{self.host} port: {self.port}')
+  def run(self, handler):
+    self.log(f'run WSGIServer: host:{self.host} port: {self.port}')
 
-      if self.quiet:
-        class QuietHandler(WSGIRequestHandler):
-          def log_request(*args, **kw):
-            if args[1] != '304' and args[1] != '200':
-              self.log(f'server response: {args[1]} {kw}')
-        self.options['handler_class'] = QuietHandler
+    if self.quiet:
+      class QuietHandler(WSGIRequestHandler):
+        def log_request(*args, **kw):
+          if args[1] != '304' and args[1] != '200':
+            self.log(f'server response: {args[1]} {kw}')
+      self.options['handler_class'] = QuietHandler
 
-      self.server = make_server(self.host, self.port, handler, **self.options)
-      self.server.serve_forever()
+    self.server = make_server(self.host, self.port, handler, **self.options)
+    self.server.serve_forever()
 
-    def stop(self):
-      self.log(f'shutting down')
-      # self.server.server_close() # <--- alternative but causes bad fd exception
-      self.server.shutdown()
+  def stop(self):
+    self.log(f'shutting down')
+    # self.server.server_close() # <--- alternative but causes bad fd exception
+    self.server.shutdown()
 
 
 class Webserver:
@@ -187,5 +187,9 @@ class Webserver:
     # self.server.stop()
 
 if __name__ == "__main__":
+  print("initializing webserver instance...")
   webserver = Webserver()
+  print("webserver instantiated.")
+  print("starting webserver...")
   webserver.start()
+  print("webserver started.")

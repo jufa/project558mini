@@ -27,7 +27,6 @@ class TimelapseCapture():
     self.camera.pre_callback = self.pre_callback
     self.daynight = DayNight(44.6509, -63.5923)
     self.root = os.path.join("./", "captures")
-    self.interval = 30
     self.is_night = True
     self.consecutive = -1
     self.sequence_data={
@@ -67,10 +66,7 @@ class TimelapseCapture():
     self.sequence_data["folder"] = path
 
 
-  def start_timelapse(self, interval=10):
-    self.interval = interval    
-    self.interval = interval # in seconds
-    print(f"interval specified is {self.interval} sec")
+  def start_timelapse(self):
     self.thread = threading.Thread(target=self.run)
     self.thread.daemon = False
     self.thread.start()
@@ -187,14 +183,14 @@ class TimelapseCapture():
     # self.server.stop()
 
 if __name__ == "__main__":
-  print("initializing webserver instance...")
-  webserver = Webserver()
-  print("webserver instantiated.")
-  print("starting webserver...")
-  webserver.start()
-  print("webserver started.")
+  # print("initializing webserver instance...")
+  # webserver = Webserver()
+  # print("webserver instantiated.")
+  # print("starting webserver...")
+  # webserver.start()
+  # print("webserver started.")
   print("timelapse instantiating...")
   timelapse = TimelapseCapture()
   print("timelapse instantiated.")
   print("starting timelapse...")
-  timelapse.start_timelapse(interval=30)
+  timelapse.start_timelapse()

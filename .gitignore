@@ -10,6 +10,8 @@ capture_lores.jpg
 
 # logs
 logs/*
+metadata.txt
+consecutive.txt
 
 # C extensions
 *.so
