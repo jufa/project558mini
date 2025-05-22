@@ -24,6 +24,9 @@ This is a project to make a compact, off the shelf, day/night all sky camera tim
 
 ## to use
  - create installation image via RPI Imager of default RPI zero 2W 64-bit lite Raspbian OS
+ - `sudo apt update`
+ - `sudo apt install git`
+ - `git clone git@github.com:jufa/project558mini.git`
  - set up the crontab file as per the example file
  - put repo in /home/pi/project558mini or similar (updating crontab appropriately)
  - install python packages as per requirements.txt
