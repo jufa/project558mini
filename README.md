@@ -38,6 +38,16 @@ This is a project to make a compact, off the shelf, day/night all sky camera tim
  - `pip install opencv-python`
  - `pip install exif`
  - `pip install git+https://github.com/raspberrypi/picamera2.git`
- - set up the crontab file as per the example file
+ - set up the crontab file as per the example file:
+ - `crontab -e`
+ - add:
+```
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+@reboot sleep 3; sudo service smbd restart
+@reboot echo crontab for user pi
+@reboot sleep 2; exec /home/pi/project558mini/bootloader.sh
+*/2 * * * * exec /home/pi/project558mini/appwatchdog.sh
+```
  - put repo in /home/pi/project558mini or similar (updating crontab appropriately)
  - install python packages as per requirements.txt
